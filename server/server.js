@@ -1,41 +1,72 @@
 ﻿"use strict";
 
 const fs = require("fs");
-
-let json = fs.readFileSync("./data/users.json");
-let users = JSON.parse(json);
-let userKeys = Object.keys(users[0]);
-
 let sqlite3 = require("sqlite3").verbose();
 
-let usersDB = new sqlite3.Database("./db/users.db");
+let userSQL = `CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY,
+  first_name TEXT,
+  last_name TEXT,
+  email TEXT,
+  gender TEXT,
+  ip_addres TEXT,
+  FOREIGN KEY (id) REFERENCES addresses (id)
+)`;
 
-usersDB.serialize(() => {
-  usersDB.run(
-    "create table if not exists " +
-      "users" +
-      " (id numeric primary key, " +
-      userKeys.filter((key) => key !== "id").join() +
-      " text)"
-  );
+let statisticSQL = `CREATE TABLE IF NOT EXISTS statistic ( 
+  id INTEGER,
+  date TEXT,
+  page_views INTEGER,
+  clicks INTEGER
+)`;
 
-  usersDB.run("delete from " + "users"); //or drop the table first..
+const pathToDB = "./db/usersDB.db";
 
-  let placeholders = userKeys.map((user) => "?").join(",");
+function createUsersTable() {
+  let usersFile = fs.readFileSync("./data/users.json");
+  let usersJSON = JSON.parse(usersFile);
+  let statisticFile = fs.readFileSync("./data/users_statistic.json");
+  let statisticJSON = JSON.parse(statisticFile);
+  let usersDB = new sqlite3.Database(pathToDB);
 
-  let stmt = usersDB.prepare("insert into users values (" + placeholders + ")");
+  usersDB.serialize(() => {
+    usersDB
+      .run(userSQL)
+      .run(statisticSQL)
+      .run("delete from " + "users")
+      .run("delete from " + "statistic");
 
-  users.forEach((user) => {
-    stmt.run([
-      user.id,
-      user.first_name,
-      user.last_name,
-      user.email,
-      user.gender,
-      user.ip_address,
-    ]);
+    let insertUser = usersDB.prepare("insert into users values (?,?,?,?,?,?)");
+
+    usersJSON.forEach((user) => {
+      insertUser.run([
+        user.id,
+        user.first_name,
+        user.last_name,
+        user.email,
+        user.gender,
+        user.ip_address,
+      ]);
+    });
+
+    insertUser.finalize();
+
+    let insertStatistic = usersDB.prepare(
+      "insert into statistic values (?,?,?,?)"
+    );
+
+    statisticJSON.forEach((item) => {
+      insertStatistic.run([
+        item.user_id,
+        item.date,
+        item.page_views,
+        item.clicks,
+      ]);
+    });
+
+    insertStatistic.finalize();
   });
+  usersDB.close();
+}
 
-  stmt.finalize();
-});
-usersDB.close();
+createUsersTable();
