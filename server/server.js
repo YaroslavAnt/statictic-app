@@ -1,72 +1,85 @@
-﻿"use strict";
+﻿const express = require("express");
+const cors = require("cors");
+const sqlite3 = require("sqlite3").verbose();
+let db = new sqlite3.Database("./db/usersDB.db");
 
-const fs = require("fs");
-let sqlite3 = require("sqlite3").verbose();
+const app = express();
+app.use(cors());
 
-let userSQL = `CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY,
-  first_name TEXT,
-  last_name TEXT,
-  email TEXT,
-  gender TEXT,
-  ip_addres TEXT,
-  FOREIGN KEY (id) REFERENCES addresses (id)
-)`;
+app.get("/", (req, res) => {
+  res.send("simple request");
+});
 
-let statisticSQL = `CREATE TABLE IF NOT EXISTS statistic ( 
-  id INTEGER,
-  date TEXT,
-  page_views INTEGER,
-  clicks INTEGER
-)`;
+app.get("/users", (req, res) => {
+  const { page = 1, amount = 10 } = req.query;
+  const startIndex = (page - 1) * amount;
+  let sql = `
+    SELECT *
+    FROM users
+    INNER JOIN statistic ON statistic.id = users.id
+    GROUP BY users.id
+    LIMIT ? , ?
 
-const pathToDB = "./db/usersDB.db";
-
-function createUsersTable() {
-  let usersFile = fs.readFileSync("./data/users.json");
-  let usersJSON = JSON.parse(usersFile);
-  let statisticFile = fs.readFileSync("./data/users_statistic.json");
-  let statisticJSON = JSON.parse(statisticFile);
-  let usersDB = new sqlite3.Database(pathToDB);
-
-  usersDB.serialize(() => {
-    usersDB
-      .run(userSQL)
-      .run(statisticSQL)
-      .run("delete from " + "users")
-      .run("delete from " + "statistic");
-
-    let insertUser = usersDB.prepare("insert into users values (?,?,?,?,?,?)");
-
-    usersJSON.forEach((user) => {
-      insertUser.run([
-        user.id,
-        user.first_name,
-        user.last_name,
-        user.email,
-        user.gender,
-        user.ip_address,
-      ]);
-    });
-
-    insertUser.finalize();
-
-    let insertStatistic = usersDB.prepare(
-      "insert into statistic values (?,?,?,?)"
-    );
-
-    statisticJSON.forEach((item) => {
-      insertStatistic.run([
-        item.user_id,
-        item.date,
-        item.page_views,
-        item.clicks,
-      ]);
-    });
-
-    insertStatistic.finalize();
+    `;
+  db.all(sql, [startIndex, amount], (err, rows) => {
+    if (err) {
+      res.send(err.message);
+    } else {
+      res.send({ rows });
+    }
   });
-  usersDB.close();
-}
+});
 
-createUsersTable();
+app.get("/users/:id", (req, res) => {
+  const reqID = req.params.id;
+  let sql = `
+    SELECT * 
+    FROM users
+    WHERE id = ?
+  `;
+
+  db.get(sql, [reqID], (err, row) => {
+    if (err) {
+      res.send(err.message);
+    } else {
+      const { first_name, last_name } = row;
+      res.send({ row });
+    }
+  });
+});
+
+app.get("/statistic", (req, res) => {
+  const { firstId, lastId } = req.query;
+  let sql = `
+    SELECT sum(clicks), id
+    FROM statistic
+    GROUP BY id
+  `;
+  db.all(sql, (err, rows) => {
+    if (err) {
+      res.send(err.message);
+    } else {
+      res.status(200).send({ data: rows });
+    }
+  });
+});
+
+app.get("/statistic/:userId", (req, res) => {
+  const [today] = new Date().toISOString().split("T");
+  const { from = "0000-00-00", to = today } = req.query;
+  const { userId } = req.params;
+  let sql = `
+    SELECT *
+    FROM statistic
+    WHERE id = ? AND date >= ? AND date <= ?
+  `;
+  db.all(sql, [userId, from, to], (err, row) => {
+    if (err) {
+      res.send(err.message);
+    } else {
+      res.send({ row });
+    }
+  });
+});
+
+app.listen(4000, () => console.log("run server on port 4000"));

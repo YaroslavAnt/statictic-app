@@ -557,5 +557,8 @@
   { "user_id": 546, "date": "2019-10-22", "page_views": 623, "clicks": 850 },
   { "user_id": 547, "date": "2019-10-22", "page_views": 180, "clicks": 719 },
   { "user_id": 548, "date": "2019-10-22", "page_views": 738, "clicks": 414 },
+  { "user_id": 548, "date": "2019-10-23", "page_views": 738, "clicks": 414 },
+  { "user_id": 548, "date": "2019-10-24", "page_views": 738, "clicks": 414 },
+  { "user_id": 548, "date": "2019-10-25", "page_views": 738, "clicks": 414 },
   { "user_id": 549, "date": "2019-10-22", "page_views": 363, "clicks": 402 }
 ]
