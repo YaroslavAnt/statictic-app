@@ -1,0 +1,58 @@
+﻿body {
+  font-family: "Montserrat", sans-serif;
+}
+
+.huge-font {
+  font-size: 36px;
+  line-height: 1.23;
+  @media (min-width: 600px) {
+    font-size: 48px;
+  }
+}
+
+.large-font {
+  font-size: 32px;
+  line-height: 1.2;
+  @media (min-width: 600px) {
+    font-size: 40px;
+  }
+}
+
+.big-font {
+  font-size: 28px;
+  line-height: 1.2;
+  @media (min-width: 600px) {
+    font-size: 32px;
+  }
+}
+
+.medium-font {
+  font-size: 20px;
+  line-height: 1.2;
+  @media (min-width: 600px) {
+    font-size: 24px;
+  }
+}
+
+.base-font {
+  font-size: 18px;
+  line-height: 1.4;
+  @media (min-width: 600px) {
+    font-size: 20px;
+  }
+}
+
+.small-font {
+  font-size: 14px;
+  line-height: 1.4;
+  @media (min-width: 600px) {
+    font-size: 16px;
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
+.blue {
+  color: var(--blue);
+}

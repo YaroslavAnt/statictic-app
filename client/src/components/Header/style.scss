@@ -1,0 +1,19 @@
+﻿.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  padding: 20px 7%;
+
+  &--with-bg {
+    background-color: var(--blue);
+  }
+
+  &--transparent {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1;
+  }
+}
