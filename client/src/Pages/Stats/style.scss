@@ -1,0 +1,31 @@
+﻿.stats-page {
+  padding: 0 7%;
+
+  .breadcrumbs {
+    padding: 30px 0;
+
+    .breadcrumb {
+      color: var(--light);
+
+      &--selected {
+        color: var(--blue);
+      }
+    }
+  }
+
+  .heading {
+    color: var(--dark);
+    margin-bottom: 30px;
+  }
+
+  .scrollbox {
+    overflow-x: scroll;
+  }
+
+  .pagination-box {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

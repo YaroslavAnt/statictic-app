@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import "./style.scss";
 
 const CardPrice = ({ img, title, price, options }) => {
   return (

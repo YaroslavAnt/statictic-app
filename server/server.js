@@ -25,11 +25,30 @@ app.get("/users", (req, res) => {
     if (err) {
       res.send(err.message);
     } else {
-      res.send({ rows });
+      res.send({ data: rows });
     }
   });
 });
 
+app.get("/statistic/:userId", (req, res) => {
+  const [today] = new Date().toISOString().split("T");
+  const { from = "0000-00-00", to = today } = req.query;
+  const { userId } = req.params;
+  let sql = `
+    SELECT *
+    FROM statistic
+    WHERE id = ? AND date >= ? AND date <= ?
+  `;
+  db.all(sql, [userId, from, to], (err, row) => {
+    if (err) {
+      res.send(err.message);
+    } else {
+      res.send({ data: row });
+    }
+  });
+});
+
+//------------------------------------------------------
 app.get("/users/:id", (req, res) => {
   const reqID = req.params.id;
   let sql = `
@@ -63,23 +82,4 @@ app.get("/statistic", (req, res) => {
     }
   });
 });
-
-app.get("/statistic/:userId", (req, res) => {
-  const [today] = new Date().toISOString().split("T");
-  const { from = "0000-00-00", to = today } = req.query;
-  const { userId } = req.params;
-  let sql = `
-    SELECT *
-    FROM statistic
-    WHERE id = ? AND date >= ? AND date <= ?
-  `;
-  db.all(sql, [userId, from, to], (err, row) => {
-    if (err) {
-      res.send(err.message);
-    } else {
-      res.send({ row });
-    }
-  });
-});
-
 app.listen(4000, () => console.log("run server on port 4000"));

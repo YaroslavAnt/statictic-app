@@ -1,0 +1,33 @@
+﻿.table {
+  margin: -2px;
+  th {
+    padding: 15px 20px;
+    vertical-align: middle;
+  }
+  td {
+    padding: 10px 20px;
+    vertical-align: middle;
+  }
+
+  &-box {
+    border-radius: 15px;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  &-head {
+    background-color: var(--blue);
+    color: #fff;
+  }
+
+  &-body {
+    tr {
+      &:nth-child(2n + 1) {
+        background-color: var(--light-gray);
+      }
+      &:nth-child(2n) {
+        background-color: var(--light-blue);
+      }
+    }
+  }
+}

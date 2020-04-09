@@ -16,12 +16,12 @@ const routes = (
   </Switch>
 );
 
-function App({ match }) {
+function App({ location }) {
   return (
     <>
-      <Header isTransparent={match.path === "/"} />
+      <Header isTransparent={location.pathname === "/"} />
       {routes}
-      <Footer isTransparent={match.path === "/"} />
+      <Footer isTransparent={location.pathname === "/"} />
     </>
   );
 }

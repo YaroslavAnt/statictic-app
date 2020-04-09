@@ -5,6 +5,7 @@ import macbook from "../../assets/macbook.png";
 import CardAdvntageList from "../../components/CardAdvntageList";
 import CardPriceList from "../../components/CardPriceList";
 import Form from "../../components/Form";
+import { NavLink } from "react-router-dom";
 
 const Main = () => {
   return (
@@ -18,7 +19,9 @@ const Main = () => {
             Our design projects are fresh and simple and will benefit your
             business greatly. Learn more about our work!
           </p>
-          <span className="button button--white">Viev Stats</span>
+          <NavLink to="/stats">
+            <span className="button button--white">Viev Stats</span>
+          </NavLink>
         </div>
         <div className="hero-imgbox">
           <div>

@@ -1,0 +1,20 @@
+﻿.card {
+  border-radius: 32px;
+  background-color: #fff;
+
+  &--advantage {
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.16);
+    padding: 12%;
+
+    &-title {
+      margin-top: 20px;
+      color: var(--dark);
+      font-weight: bold;
+    }
+
+    &-text {
+      margin-top: 20px;
+      color: var(--gray);
+    }
+  }
+}
