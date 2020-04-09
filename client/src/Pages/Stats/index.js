@@ -10,7 +10,7 @@ import Pagination from "../../components/Pagination";
 const Stats = ({ history, location }) => {
   const { push } = history;
   const { search } = location;
-  const { page } = qs.parse(search, { ignoreQueryPrefix: true });
+  const { page = 1 } = qs.parse(search, { ignoreQueryPrefix: true });
 
   const [rows, setRows] = useState([]);
 
