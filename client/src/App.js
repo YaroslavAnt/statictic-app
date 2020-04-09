@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, BrowserRouter, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 
 import "./styles/index.scss";
 import ChartsHoc from "./Pages/Charts";

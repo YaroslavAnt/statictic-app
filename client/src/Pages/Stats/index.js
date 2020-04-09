@@ -11,9 +11,10 @@ const Stats = ({ history, location }) => {
   const { push } = history;
   const { search } = location;
   const { page } = qs.parse(search, { ignoreQueryPrefix: true });
+
   const [rows, setRows] = useState([]);
 
-  const fetchData = async (query = "") => {
+  const fetchData = async (query) => {
     const res = await fetch(`${BASE_URL}${USERS_ENDPOINT}${query}`);
     res
       .json()
@@ -23,10 +24,6 @@ const Stats = ({ history, location }) => {
 
   const handlePageChange = ({ selected }) =>
     push(`/stats?page=${selected + 1}`);
-
-  useEffect(() => {
-    fetchData(search);
-  }, []);
 
   useEffect(() => {
     fetchData(search);
