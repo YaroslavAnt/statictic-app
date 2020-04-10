@@ -18,9 +18,16 @@ const Charts = ({ match }) => {
     params: { id: userId },
   } = match;
 
+  var d = new Date();
+
+  const [today] = new Date().toISOString().split("T");
+  const [weekAgo] = new Date(d.setDate(d.getDate() - 7))
+    .toISOString()
+    .split("T");
+
   const [data, setData] = useState([]);
-  const [startDate, setStartDate] = useState("");
-  const [endtDate, setEndtDate] = useState("");
+  const [startDate, setStartDate] = useState(weekAgo);
+  const [endtDate, setEndtDate] = useState(today);
 
   const fetchData = async () => {
     let query = startDate || endtDate ? "?" : "";
@@ -82,6 +89,7 @@ const Charts = ({ match }) => {
             type="date"
             name="startDate"
             id="startDate"
+            value={startDate}
             onChange={({ target }) => setStartDate(target.value)}
           />
           &ensp; To
@@ -89,6 +97,7 @@ const Charts = ({ match }) => {
             type="date"
             name="endtDate"
             id="endtDate"
+            value={endtDate}
             onChange={({ target }) => setEndtDate(target.value)}
           />
         </div>

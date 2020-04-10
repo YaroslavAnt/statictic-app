@@ -1,6 +1,6 @@
 ﻿# WELLCOME
 
-##CLONE REPO
+## CLONE REPO
 
 In order to clone this project type in terminal
 
@@ -20,7 +20,7 @@ $ cd server
 $ npm install
 ```
 
-##SERVER
+## SERVER
 
 Init or update database
 
@@ -36,7 +36,7 @@ $ cd server
 $ npm run start
 ```
 
-##CLIENT
+## CLIENT
 
 Run application
 
