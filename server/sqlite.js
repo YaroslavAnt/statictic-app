@@ -9,7 +9,7 @@ let userSQL = `CREATE TABLE IF NOT EXISTS users (
   last_name TEXT,
   email TEXT,
   gender TEXT,
-  ip_addres TEXT,
+  ip_addres TEXT
 )`;
 
 let statisticSQL = `CREATE TABLE IF NOT EXISTS users_statistic ( 
@@ -22,9 +22,9 @@ let statisticSQL = `CREATE TABLE IF NOT EXISTS users_statistic (
 const pathToDB = "./db/sqliteDB.db";
 
 function createUsersTable() {
-  let usersFile = fs.readFileSync("./data/users_old.json");
+  let usersFile = fs.readFileSync("./data/users.json");
   let usersJSON = JSON.parse(usersFile);
-  let statisticFile = fs.readFileSync("./data/users_statistic_old.json");
+  let statisticFile = fs.readFileSync("./data/users_statistic.json");
   let statisticJSON = JSON.parse(statisticFile);
   let usersDB = new sqlite3.Database(pathToDB);
 
