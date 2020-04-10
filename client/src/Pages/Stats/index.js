@@ -63,7 +63,7 @@ const Stats = ({ history, location }) => {
           </NavLink>
         </div>
         <div>
-          {[10, 15, 20].map((number) => {
+          {[10, 20, 50].map((number) => {
             return (
               <label htmlFor={`number${number}`} key={number}>
                 <input
