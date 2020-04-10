@@ -18,11 +18,11 @@ const routes = (
 
 function App({ location }) {
   return (
-    <>
+    <div className="layout">
       <Header isTransparent={location.pathname === "/"} />
       {routes}
       <Footer isTransparent={location.pathname === "/"} />
-    </>
+    </div>
   );
 }
 

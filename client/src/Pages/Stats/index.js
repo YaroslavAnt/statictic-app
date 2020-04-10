@@ -55,7 +55,7 @@ const Stats = ({ history, location }) => {
           </NavLink>
           &ensp;>&ensp;
           <NavLink
-            to="/stats"
+            to="/users"
             className="breadcrumb"
             activeClassName="breadcrumb--selected"
           >

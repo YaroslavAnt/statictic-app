@@ -17,8 +17,10 @@ app.get("/statistic/:userId", (req, res) => {
   let sql = `
     SELECT *
     FROM statistic
+    INNER JOIN users USING(id)
     WHERE id = ? AND date >= ? AND date <= ?
-  `;
+    `;
+  //
   db.all(sql, [userId, from, to], (err, row) => {
     if (err) {
       res.send(err.message);

@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import { Link } from "react-router-dom";
 import "./style.scss";
 
 const Table = ({ rows = [] }) => {
@@ -6,9 +7,15 @@ const Table = ({ rows = [] }) => {
   const tableRows = rows.map((row) => {
     return (
       <tr key={row.id}>
-        <td>{row.id}</td>
-        <td>{row.first_name}</td>
-        <td>{row.last_name}</td>
+        <td>
+          <Link to={`users/${row.id}`}>{row.id}</Link>
+        </td>
+        <td>
+          <Link to={`users/${row.id}`}>{row.first_name}</Link>
+        </td>
+        <td>
+          <Link to={`users/${row.id}`}>{row.last_name}</Link>
+        </td>
         <td>{row.email}</td>
         <td>{row.gender}</td>
         <td>{row.ip_addres}</td>
