@@ -8,46 +8,78 @@ import { USERS_ENDPOINT, BASE_URL } from "../../config";
 import Pagination from "../../components/Pagination";
 
 const Stats = ({ history, location }) => {
-  const { push } = history;
   const { search } = location;
   const { page = 1 } = qs.parse(search, { ignoreQueryPrefix: true });
 
   const [rows, setRows] = useState([]);
+  const [lastPage, setLastPage] = useState(1);
+  const [usersPerPage, setUsersPerPage] = useState(10);
 
-  const fetchData = async (query) => {
+  const fetchData = async () => {
+    const query = search
+      ? `${search}&amount=${usersPerPage}`
+      : `?amount=${usersPerPage}`;
     const res = await fetch(`${BASE_URL}${USERS_ENDPOINT}${query}`);
     res
       .json()
-      .then(({ data }) => setRows(data))
+      .then(({ data, last_page }) => {
+        setLastPage(last_page);
+        setRows(data);
+      })
       .catch((err) => alert("Fail to fetch data"));
   };
 
   const handlePageChange = ({ selected }) =>
-    push(`/stats?page=${selected + 1}`);
+    history.push(`/users?page=${selected + 1}`);
+
+  const handleUsersPerPageChange = ({ target }) => {
+    setUsersPerPage(target.value);
+    history.push(`/users?page=${1}`);
+  };
 
   useEffect(() => {
-    fetchData(search);
-  }, [search]);
+    fetchData();
+  }, [search, usersPerPage]);
 
   return (
     <main className="stats-page">
-      <div className="breadcrumbs">
-        <NavLink
-          exact
-          to="/"
-          className="breadcrumb"
-          activeClassName="breadcrumb--selected"
-        >
-          Main page
-        </NavLink>
-        &emsp;>&emsp;
-        <NavLink
-          to="/stats"
-          className="breadcrumb"
-          activeClassName="breadcrumb--selected"
-        >
-          Stats
-        </NavLink>
+      <div className="topbar">
+        <div className="breadcrumbs">
+          <NavLink
+            exact
+            to="/"
+            className="breadcrumb"
+            activeClassName="breadcrumb--selected"
+          >
+            Main page
+          </NavLink>
+          &ensp;>&ensp;
+          <NavLink
+            to="/stats"
+            className="breadcrumb"
+            activeClassName="breadcrumb--selected"
+          >
+            User statistics
+          </NavLink>
+        </div>
+        <div>
+          {[10, 15, 20].map((number) => {
+            return (
+              <label htmlFor={`number${number}`} key={number}>
+                <input
+                  type="radio"
+                  name="number"
+                  value={number}
+                  checked={number === +usersPerPage}
+                  id={`number${number}`}
+                  onChange={handleUsersPerPageChange}
+                />
+                {number}
+              </label>
+            );
+          })}
+          &ensp;rows
+        </div>
       </div>
 
       <h1 className="huge-font heading">
@@ -60,7 +92,7 @@ const Stats = ({ history, location }) => {
 
       <div className="pagination-box">
         <Pagination
-          pageCount={9}
+          pageCount={lastPage}
           handlePageChange={handlePageChange}
           selectedPage={page - 1}
         />

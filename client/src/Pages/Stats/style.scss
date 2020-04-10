@@ -1,6 +1,17 @@
 ﻿.stats-page {
   padding: 0 7%;
 
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    label:hover {
+      cursor: pointer;
+      font-weight: bold;
+    }
+  }
+
   .breadcrumbs {
     padding: 30px 0;
 

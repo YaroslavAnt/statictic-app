@@ -1,5 +1,6 @@
 ﻿import React from "react";
 import "./style.scss";
+import { NavLink } from "react-router-dom";
 
 const Header = ({ isTransparent }) => {
   return (
@@ -8,7 +9,9 @@ const Header = ({ isTransparent }) => {
         isTransparent ? "header--transparent" : "header--with-bg"
       }`}
     >
-      <span className="big-font">AppCo</span>
+      <NavLink to="/">
+        <span className="big-font">AppCo</span>
+      </NavLink>
     </header>
   );
 };

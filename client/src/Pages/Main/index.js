@@ -19,7 +19,7 @@ const Main = () => {
             Our design projects are fresh and simple and will benefit your
             business greatly. Learn more about our work!
           </p>
-          <NavLink to="/stats">
+          <NavLink to="/users">
             <span className="button button--white">Viev Stats</span>
           </NavLink>
         </div>
