@@ -10,7 +10,6 @@ let userSQL = `CREATE TABLE IF NOT EXISTS users (
   email TEXT,
   gender TEXT,
   ip_addres TEXT,
-  FOREIGN KEY (id) REFERENCES addresses (id)
 )`;
 
 let statisticSQL = `CREATE TABLE IF NOT EXISTS users_statistic ( 
@@ -20,12 +19,12 @@ let statisticSQL = `CREATE TABLE IF NOT EXISTS users_statistic (
   clicks INTEGER
 )`;
 
-const pathToDB = "./db/usersDB.db";
+const pathToDB = "./db/sqliteDB.db";
 
 function createUsersTable() {
-  let usersFile = fs.readFileSync("./data/users.json");
+  let usersFile = fs.readFileSync("./data/users_old.json");
   let usersJSON = JSON.parse(usersFile);
-  let statisticFile = fs.readFileSync("./data/users_statistic.json");
+  let statisticFile = fs.readFileSync("./data/users_statistic_old.json");
   let statisticJSON = JSON.parse(statisticFile);
   let usersDB = new sqlite3.Database(pathToDB);
 
@@ -34,7 +33,7 @@ function createUsersTable() {
       .run(userSQL)
       .run(statisticSQL)
       .run("delete from " + "users")
-      .run("delete from " + "statistic");
+      .run("delete from " + "users_statistic");
 
     let insertUser = usersDB.prepare("insert into users values (?,?,?,?,?,?)");
 
@@ -52,7 +51,7 @@ function createUsersTable() {
     insertUser.finalize();
 
     let insertStatistic = usersDB.prepare(
-      "insert into statistic values (?,?,?,?)"
+      "insert into users_statistic values (?,?,?,?)"
     );
 
     statisticJSON.forEach((item) => {
