@@ -63,39 +63,5 @@ app.get("/users", (req, res) => {
     });
   });
 });
-//------------------------------------------------------
-// app.get("/users/:id", (req, res) => {
-//   const reqID = req.params.id;
-//   let sql = `
-//     SELECT *
-//     FROM users
-//     WHERE id = ?
-//   `;
-
-//   db.get(sql, [reqID], (err, row) => {
-//     if (err) {
-//       res.send(err.message);
-//     } else {
-//       const { first_name, last_name } = row;
-//       res.send({ row });
-//     }
-//   });
-// });
-
-// app.get("/statistic", (req, res) => {
-//   const { firstId, lastId } = req.query;
-//   let sql = `
-//     SELECT sum(clicks), id
-//     FROM statistic
-//     GROUP BY id
-//   `;
-//   db.all(sql, (err, rows) => {
-//     if (err) {
-//       res.send(err.message);
-//     } else {
-//       res.status(200).send({ data: rows });
-//     }
-//   });
-// });
 
 app.listen(4000, () => console.log("run server on port 4000"));
