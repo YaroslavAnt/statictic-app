@@ -1,7 +1,7 @@
 ﻿const express = require("express");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
-let db = new sqlite3.Database("./db/usersDB.db");
+let db = new sqlite3.Database("./db/sqliteDB.db");
 
 const app = express();
 app.use(cors());
@@ -16,8 +16,8 @@ app.get("/statistic/:userId", (req, res) => {
   const { userId } = req.params;
   let sql = `
     SELECT *
-    FROM statistic
-    INNER JOIN users USING(id)
+    FROM users_statistic
+    INNER JOIN users ON users_statistic.user_id = users.id
     WHERE id = ? AND date >= ? AND date <= ?
     `;
   //
@@ -41,7 +41,7 @@ app.get("/users", (req, res) => {
   let sql2 = `
     SELECT *
     FROM users
-    INNER JOIN statistic ON statistic.id = users.id
+    INNER JOIN users_statistic ON users_statistic.user_id = users.id
     GROUP BY users.id
     LIMIT ? , ?
     `;

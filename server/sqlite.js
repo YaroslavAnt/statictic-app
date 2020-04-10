@@ -13,8 +13,8 @@ let userSQL = `CREATE TABLE IF NOT EXISTS users (
   FOREIGN KEY (id) REFERENCES addresses (id)
 )`;
 
-let statisticSQL = `CREATE TABLE IF NOT EXISTS statistic ( 
-  id INTEGER,
+let statisticSQL = `CREATE TABLE IF NOT EXISTS users_statistic ( 
+  user_id INTEGER,
   date TEXT,
   page_views INTEGER,
   clicks INTEGER
