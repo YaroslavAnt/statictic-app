@@ -37,6 +37,10 @@ const Stats = ({ history, location }) => {
     history.push(`/users?page=${1}`);
   };
 
+  const handleRowClick = (userId) => () => {
+    history.push(`/users/${userId}`);
+  };
+
   useEffect(() => {
     fetchData();
   }, [search, usersPerPage]);
@@ -87,7 +91,7 @@ const Stats = ({ history, location }) => {
       </h1>
 
       <div className="scrollbox">
-        <Table rows={rows} />
+        <Table rows={rows} onRowClick={handleRowClick} />
       </div>
 
       <div className="pagination-box">
