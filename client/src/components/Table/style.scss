@@ -22,11 +22,15 @@
 
   &-body {
     tr {
+      cursor: pointer;
       &:nth-child(2n + 1) {
         background-color: var(--light-gray);
       }
       &:nth-child(2n) {
         background-color: var(--light-blue);
+      }
+      &:hover {
+        background-color: var(--light);
       }
     }
   }

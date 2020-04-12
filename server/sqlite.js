@@ -9,18 +9,17 @@ let userSQL = `CREATE TABLE IF NOT EXISTS users (
   last_name TEXT,
   email TEXT,
   gender TEXT,
-  ip_addres TEXT,
-  FOREIGN KEY (id) REFERENCES addresses (id)
+  ip_addres TEXT
 )`;
 
-let statisticSQL = `CREATE TABLE IF NOT EXISTS statistic ( 
-  id INTEGER,
+let statisticSQL = `CREATE TABLE IF NOT EXISTS users_statistic ( 
+  user_id INTEGER,
   date TEXT,
   page_views INTEGER,
   clicks INTEGER
 )`;
 
-const pathToDB = "./db/usersDB.db";
+const pathToDB = "./db/sqliteDB.db";
 
 function createUsersTable() {
   let usersFile = fs.readFileSync("./data/users.json");
@@ -34,7 +33,7 @@ function createUsersTable() {
       .run(userSQL)
       .run(statisticSQL)
       .run("delete from " + "users")
-      .run("delete from " + "statistic");
+      .run("delete from " + "users_statistic");
 
     let insertUser = usersDB.prepare("insert into users values (?,?,?,?,?,?)");
 
@@ -52,7 +51,7 @@ function createUsersTable() {
     insertUser.finalize();
 
     let insertStatistic = usersDB.prepare(
-      "insert into statistic values (?,?,?,?)"
+      "insert into users_statistic values (?,?,?,?)"
     );
 
     statisticJSON.forEach((item) => {
