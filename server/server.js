@@ -6,8 +6,9 @@ let db = new sqlite3.Database("./db/sqliteDB.db");
 const app = express();
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("test");
+app.get("/test/:id", (req, res) => {
+  const { id } = req.params;
+  res.send(id);
 });
 
 app.get("/statistic/:userId", (req, res) => {
@@ -15,7 +16,7 @@ app.get("/statistic/:userId", (req, res) => {
   const { from = "0000-00-00", to = today } = req.query;
   const { userId } = req.params;
   let sql = `
-    SELECT *
+    SELECT page_views, clicks,  date
     FROM users_statistic
     INNER JOIN users ON users_statistic.user_id = users.id
     WHERE id = ? AND date >= ? AND date <= ?
@@ -61,6 +62,22 @@ app.get("/users", (req, res) => {
         res.send({ last_page, data: rows });
       }
     });
+  });
+});
+
+app.get("/users/:userId", (req, res) => {
+  const { userId } = req.params;
+  let sql = `
+    SELECT first_name, last_name
+    FROM users
+    WHERE id = ?
+  `;
+  db.get(sql, [userId], (err, row) => {
+    if (err) {
+      res.send(err.message);
+    } else {
+      res.send({ data: row });
+    }
   });
 });
 
