@@ -10,7 +10,7 @@ import {
   LineChart,
 } from "recharts";
 
-import { STATISTIC_ENDPOINT, BASE_URL } from "../../config";
+import { STATISTIC_ENDPOINT, USERS_ENDPOINT, BASE_URL } from "../../config";
 import "./style.scss";
 
 const Charts = ({ match }) => {
@@ -26,6 +26,8 @@ const Charts = ({ match }) => {
     .split("T");
 
   const [data, setData] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [startDate, setStartDate] = useState(weekAgo);
   const [endtDate, setEndtDate] = useState(today);
 
@@ -45,10 +47,46 @@ const Charts = ({ match }) => {
       .then(({ data }) => {
         setData(data);
       })
-      .catch((err) => alert("Fail to fetch data"));
+      .catch((err) => alert("Fail to fetch data", err));
+  };
+
+  const fetchName = async () => {
+    const res = await fetch(`${BASE_URL}${USERS_ENDPOINT}/${userId}`);
+    res
+      .json()
+      .then(({ data }) => {
+        const { first_name, last_name } = data;
+        setFirstName(first_name);
+        setLastName(last_name);
+      })
+      .catch((err) => alert("Fail to fetch data", err));
+  };
+
+  const createTableData = (startDate, endDate, data) => {
+    let dates = [];
+    const dayMilSec = 1000 * 60 * 60 * 24;
+    const startMilSec = new Date(startDate).valueOf();
+    const endMilSec = new Date(endDate).valueOf();
+
+    for (let date = startMilSec; date < endMilSec; date += dayMilSec) {
+      dates.push(new Date(date).toISOString().split("T")[0]);
+    }
+
+    const dataForTable = dates.map(
+      (date) =>
+        data.find((dataItem) => dataItem.date === date) || {
+          first_name: "",
+          last_name: "",
+          date,
+          clicks: 0,
+          page_views: 0,
+        }
+    );
+    return dataForTable;
   };
 
   useEffect(() => {
+    fetchName();
     fetchData();
   }, [startDate, endtDate]);
 
@@ -80,17 +118,22 @@ const Charts = ({ match }) => {
             className="breadcrumb"
             activeClassName="breadcrumb--selected"
           >
-            {data[0] && data[0].first_name + data[0].last_name}
+            {`${firstName} ${lastName}`}
           </NavLink>
         </div>
-        <div>
+
+        <form>
           From
           <input
             type="date"
             name="startDate"
             id="startDate"
             value={startDate}
-            onChange={({ target }) => setStartDate(target.value)}
+            onChange={({ target }) =>
+              setStartDate(
+                target.value < "2019-01-01" ? "2019-01-01" : target.value
+              )
+            }
           />
           &ensp; To
           <input
@@ -98,13 +141,15 @@ const Charts = ({ match }) => {
             name="endtDate"
             id="endtDate"
             value={endtDate}
-            onChange={({ target }) => setEndtDate(target.value)}
+            onChange={({ target }) =>
+              setEndtDate(target.value > today ? today : target.value)
+            }
           />
-        </div>
+        </form>
       </div>
 
       <h1 className="huge-font heading">
-        <b>{data[0] && data[0].first_name + " " + data[0].last_name}</b>
+        <b>{`${firstName} ${lastName}`}</b>
       </h1>
 
       <h2 className="big-font bold">Clicks</h2>
@@ -113,7 +158,7 @@ const Charts = ({ match }) => {
           <LineChart
             width={500}
             height={200}
-            data={data}
+            data={createTableData(startDate, endtDate, data)}
             syncId="anyId"
             margin={{
               top: 20,
@@ -135,13 +180,14 @@ const Charts = ({ match }) => {
           </LineChart>
         </ResponsiveContainer>
       </div>
+
       <h2 className="big-font bold">Views</h2>
       <div style={{ width: "100%", height: 320 }}>
         <ResponsiveContainer>
           <LineChart
             width={500}
             height={200}
-            data={data}
+            data={createTableData(startDate, endtDate, data)}
             syncId="anyId1"
             margin={{
               top: 20,
